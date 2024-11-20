@@ -62,7 +62,7 @@ module Bskyrb
           },
           "features" => [
             {
-              "uri" => URI.parse("#{m[0]}://#{path}/").normalize.to_s,
+              "uri" => URI.parse("#{m[0]}://#{path}").normalize.to_s,
               "$type" => "app.bsky.richtext.facet#link",
             },
           ],
