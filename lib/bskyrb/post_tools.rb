@@ -50,6 +50,8 @@ module Bskyrb
         index_start = Regexp.last_match.offset(0).first
         index_end = Regexp.last_match.offset(0).last
         m.compact!
+        next unless m[1]
+
         path = "#{m[1]}#{m[2..-1].join("")}".strip
         facets.push(
           "$type" => "app.bsky.richtext.facet",
@@ -59,7 +61,7 @@ module Bskyrb
           },
           "features" => [
             {
-              "uri" => URI.parse("#{m[0]}://#{path}/").normalize.to_s, # this is the matched link
+              "uri" => URI.parse("#{m[0]}://#{path}/").normalize.to_s.gsub(%r(/{2,}), '/'),
               "$type" => "app.bsky.richtext.facet#link",
             },
           ],
