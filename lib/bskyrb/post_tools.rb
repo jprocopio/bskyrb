@@ -52,7 +52,8 @@ module Bskyrb
         m.compact!
         next unless m[1]
 
-        path = "#{m[1]}#{m[2..-1].join("")}".strip
+        path = "#{m[1]}#{m[2..-1].join("")}".strip.gsub(%r(/{2,}), '/')
+
         facets.push(
           "$type" => "app.bsky.richtext.facet",
           "index" => {
@@ -61,7 +62,7 @@ module Bskyrb
           },
           "features" => [
             {
-              "uri" => URI.parse("#{m[0]}://#{path}/").normalize.to_s.gsub(%r(/{2,}), '/'),
+              "uri" => URI.parse("#{m[0]}://#{path}/").normalize.to_s,
               "$type" => "app.bsky.richtext.facet#link",
             },
           ],
