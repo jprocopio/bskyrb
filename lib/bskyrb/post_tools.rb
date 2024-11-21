@@ -17,11 +17,39 @@ require "xrpc"
 module Bskyrb
   module PostTools
     def create_facets(text)
+      text = text.force_encoding('utf-16').force_encoding('utf-8')
+
       facets = []
 
       # Regex patterns
       mention_pattern = /(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/
       link_pattern = URI.regexp
+      hashtag_pattern = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/
+
+      # Find hashtags
+      text.enum_for(:scan, hashtag_pattern).each do |m|
+        index_start = Regexp.last_match.offset(0).first
+        index_end = Regexp.last_match.offset(0).last
+
+        loop do
+          break unless text[index_end].match?(/[\.\?\!\{\}$&\(\)\|\<\>\,:;]/)
+          index_end -= 1
+        end
+
+        facets.push(
+          "$type" => "app.bsky.richtext.facet",
+          "index" => {
+            "byteStart" => index_start,
+            "byteEnd" => index_end,
+          },
+          "features" => [
+            {
+              'tag' => text[index_start..index_end].sub(/^#/, ''),
+              "$type" => 'app.bsky.richtext.facet#tag',
+            },
+          ],
+        )
+      end
 
       # Find mentions
       text.enum_for(:scan, mention_pattern).each do |m|
