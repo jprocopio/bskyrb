@@ -36,6 +36,8 @@ module Bskyrb
           index_end -= 1
         end
 
+        tag = text[index_start..index_end].strip.sub(/^#/, '')
+
         facets.push(
           "$type" => "app.bsky.richtext.facet",
           "index" => {
@@ -44,7 +46,7 @@ module Bskyrb
           },
           "features" => [
             {
-              'tag' => text[index_start..index_end].sub(/^#/, ''),
+              'tag' => tag,
               "$type" => 'app.bsky.richtext.facet#tag',
             },
           ],
