@@ -69,7 +69,8 @@ module Bskyrb
         )
       end
 
-      facets.empty? ? nil : facets
+      facets
+      # facets.empty? ? nil : facets
     end
   end
 end
