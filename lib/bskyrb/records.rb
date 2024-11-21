@@ -52,9 +52,12 @@ module Bskyrb
           "$type" => "app.bsky.feed.post",
           "createdAt" => DateTime.now.iso8601(3),
           "text" => text,
-          "facets" => create_facets(text),
         },
       }
+
+      facets = create_facets(text)
+      input["facets"] = facets if facets
+
       if reply_to
         input.record["reply"] = {
           "parent" => {
