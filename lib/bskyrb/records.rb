@@ -51,7 +51,7 @@ module Bskyrb
         "record" => {
           "$type" => "app.bsky.feed.post",
           "createdAt" => DateTime.now.iso8601(3),
-          "text" => text,
+          "text" => text.force_encoding('utf-8'),
           "facets" => create_facets(text),
         },
       }
