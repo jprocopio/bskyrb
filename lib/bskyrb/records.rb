@@ -44,6 +44,8 @@ module Bskyrb
     end
 
     def create_post_or_reply(text, reply_to = nil)
+$stdout.puts "OKOK BYTES IN TEXT:\n#{text.bytes.join(' ')}\n"
+
       input = {
         "collection" => "app.bsky.feed.post",
         "$type" => "app.bsky.feed.post",
