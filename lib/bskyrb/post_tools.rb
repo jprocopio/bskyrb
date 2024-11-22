@@ -36,6 +36,8 @@ module Bskyrb
           index_end -= 1
         end
 
+$stdout.puts "OKOK last char of hashtag set to: #{text[index_end]}"
+
         tag = text[index_start..index_end].strip.sub(/^#/, '')
 
         facets.push(
