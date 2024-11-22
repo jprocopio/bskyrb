@@ -32,7 +32,7 @@ module Bskyrb
         index_end = Regexp.last_match.offset(0).last
 
         loop do
-          break unless text[index_end].match?(/[\.\?\!\{\}$&\(\)\|\<\>\,:;]/)
+          break unless text[index_end].match?(/([[:punct:]]|[[:space:]])$/)
           index_end -= 1
         end
 
