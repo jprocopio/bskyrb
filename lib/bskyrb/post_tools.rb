@@ -31,12 +31,15 @@ module Bskyrb
         index_start = Regexp.last_match.offset(0).first
         index_end = Regexp.last_match.offset(0).last
 
+        loop_modified = false
+
         loop do
           break unless text[index_end].match?(/([[:punct:]]|[[:space:]])$/)
+          loop_modified = true
           index_end -= 1
         end
 
-$stdout.puts "OKOK last char of hashtag set to: #{text[index_end]}"
+        index += 1 if loop_modified
 
         tag = text[index_start..index_end].strip.sub(/^#/, '')
 
