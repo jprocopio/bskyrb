@@ -39,7 +39,7 @@ module Bskyrb
           index_end -= 1
         end
 
-        index += 1 if loop_modified
+        index_end += 1 if loop_modified
 
         tag = text[index_start..index_end].strip.sub(/^#/, '')
 
