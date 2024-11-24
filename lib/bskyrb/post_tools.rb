@@ -34,7 +34,7 @@ module Bskyrb
         loop_modified = false
 
         loop do
-          break unless text[index_end].match?(/([[:punct:]]|[[:space:]])$/)
+          break unless text[index_end].match?(/([[:punct:]]|[[:space:]])/)
           loop_modified = true
           index_end -= 1
         end
@@ -42,6 +42,8 @@ module Bskyrb
         index_end += 1 if loop_modified
 
         tag = text[index_start..index_end].strip.sub(/^#/, '')
+
+        index_end -= 1 if loop_modified
 
         facets.push(
           "$type" => "app.bsky.richtext.facet",
