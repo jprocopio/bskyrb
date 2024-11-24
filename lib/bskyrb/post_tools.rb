@@ -43,8 +43,6 @@ module Bskyrb
 
         tag = text[index_start..index_end].strip.sub(/^#/, '')
 
-        index_end -= 1 if loop_modified
-
         facets.push(
           "$type" => "app.bsky.richtext.facet",
           "index" => {
