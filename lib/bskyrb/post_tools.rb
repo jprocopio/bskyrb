@@ -42,7 +42,7 @@ module Bskyrb
 
         # index_end += 1 if loop_modified
 
-        tag = text[index_start..index_end].strip.sub(/^#/, '') # .gsub(/[[:punct:]]/, '')
+        tag = text[index_start..index_end].strip.sub(/^#/, '').sub(/\W+$/, '')
 
         facets.push(
           "$type" => "app.bsky.richtext.facet",
