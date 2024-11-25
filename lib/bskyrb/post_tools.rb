@@ -45,6 +45,8 @@ module Bskyrb
 
         tag = text[index_start..index_end].strip.sub(/^#/, '').sub(/\W+$/, '')
 
+        next if tag.match?(/^\d+$/) # nothing but numbers
+
         facets.push(
           "$type" => "app.bsky.richtext.facet",
           "index" => {
