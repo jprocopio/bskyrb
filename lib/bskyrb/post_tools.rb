@@ -24,24 +24,25 @@ module Bskyrb
       # Regex patterns
       mention_pattern = /(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/
       link_pattern = URI.regexp
-      hashtag_pattern = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/
+      # hashtag_pattern = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/
+      # hashtag_pattern = /(?:^|\s|[[:punct:]])(#[^\d\s][\w\d]+)/
+      hashtag_pattern = /(?:^|\W)(#\w+)(?=\W)?/
 
       # Find hashtags
       text.enum_for(:scan, hashtag_pattern).each do |m|
         index_start = Regexp.last_match.offset(0).first
-        index_end = Regexp.last_match.offset(0).last
+        index_end = Regexp.last_match.offset(0).last - 1
 
-        loop_modified = false
+        # loop_modified = false
 
         loop do
-          break unless text[index_end].match?(/([[:punct:]]|[[:space:]])/)
-          loop_modified = true
-          index_end -= 1
+          break unless text[index_start].match?(/\W/) && text[index_start] != '#'
+          index_start += 1
         end
 
-        index_end += 1 if loop_modified
+        # index_end += 1 if loop_modified
 
-        tag = text[index_start..index_end].strip.sub(/^#/, '').gsub(/[[:punct:]]/, '')
+        tag = text[index_start..index_end].strip.sub(/^#/, '') # .gsub(/[[:punct:]]/, '')
 
         facets.push(
           "$type" => "app.bsky.richtext.facet",
