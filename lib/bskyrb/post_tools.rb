@@ -33,14 +33,15 @@ module Bskyrb
         index_start = Regexp.last_match.offset(0).first
         index_end = Regexp.last_match.offset(0).last - 1
 
-        # loop_modified = false
+        loop_modified = false
 
         loop do
           break unless text[index_start].match?(/\W/) && text[index_start] != '#'
           index_start += 1
+          loop_modified = true
         end
 
-        # index_end += 1 if loop_modified
+        index_end += 1 if loop_modified
 
         tag = text[index_start..index_end].strip.sub(/^#/, '').sub(/\W+$/, '')
 
