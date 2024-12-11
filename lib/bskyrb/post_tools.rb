@@ -23,44 +23,29 @@ module Bskyrb
 
       # Regex patterns
       mention_pattern = /(^|\s|\()(@)([a-zA-Z0-9.-]+)(\b)/
-      link_pattern = URI.regexp
-      # hashtag_pattern = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/
-      # hashtag_pattern = /(?:^|\s|[[:punct:]])(#[^\d\s][\w\d]+)/
-      hashtag_pattern = /(?:^|\W)(#\w+)(?=\W)?/
+      link_pattern = URI::DEFAULT_PARSER.make_regexp
+      hashtag_pattern = /(?<![\w#])(#)(?!\d+\b)([a-zA-Z0-9_]+)(?!\w)/
 
       # Find hashtags
       text.enum_for(:scan, hashtag_pattern).each do |m|
-        index_start = Regexp.last_match.offset(0).first
-        index_end = Regexp.last_match.offset(0).last - 1
-
-        loop_modified = false
-
-        loop do
-          break unless text[index_start].match?(/\W/) && text[index_start] != '#'
-          index_start += 1
-          loop_modified = true
-        end
-
-        index_end += 1 if loop_modified
-
-        tag = text[index_start..index_end].strip.sub(/^#/, '').sub(/\W+$/, '')
-
-        next if tag.match?(/^\d+$/) # nothing but numbers
-
+        index_start = text[0...Regexp.last_match.begin(0)].bytesize
+        index_end = text[0...Regexp.last_match.end(0)].bytesize
+        tag = m[1] # The hashtag content is now in the second capture group
         facets.push(
           "$type" => "app.bsky.richtext.facet",
           "index" => {
             "byteStart" => index_start,
-            "byteEnd" => index_end,
+            "byteEnd" => index_end
           },
           "features" => [
             {
-              'tag' => tag,
-              "$type" => 'app.bsky.richtext.facet#tag',
-            },
-          ],
+              "tag" => tag.gsub(/^#/, ""), # Remove the leading '#' from the hashtag
+              "$type" => "app.bsky.richtext.facet#tag"
+            }
+          ]
         )
       end
+
 
       # Find mentions
       text.enum_for(:scan, mention_pattern).each do |m|
